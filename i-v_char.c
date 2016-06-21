@@ -10,6 +10,9 @@ Masahiro Fukuoka
 #include <string.h>
 #include <ctype.h>
 
+const double e = 1.60217662e-19;
+const double k_B = 1.38064852e-23;
+
 // gamma_g
 double calc_gamma_g(double sigma)
 {
@@ -30,3 +33,10 @@ double calc_xi(double sigma, double gamma_l)
 	return 1.36603(gamma_l/gamma) -0.47719*pow((gamma_l/gamma), 2) +0.1116*pow((gamma_l/gamma), 3);
 }
 
+// thermionic-type of current density
+double j_themal(double v, double T, double J_e, double V_e, double n)
+{
+	double tmp1 = exp((e*v)/(n*k_B*T)) - 1.0;
+	double tmp2 = exp((e*V_e)/(n*k_B*T)) - 1.0;
+	return J_e * tmp1 / tmp2;
+}

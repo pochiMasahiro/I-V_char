@@ -59,8 +59,8 @@ int main(void)
 	double I_e = 0.60;
 	double T = 100;
 	double i;
-	for(i=0; i < 400; i+=0.001) {
-		fprintf(stdout, "%lf %lf", i, j_thermal(i, T, I_e, V_e, 3.7));
+	for(i=0; i < 0.4; i+=0.01) {
+		fprintf(stdout, "%lf %lf\n", i, j_thermal(i, T, I_e, V_e, 3.7));
 	}
 	return EXIT_SUCCESS;
 }

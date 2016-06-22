@@ -52,3 +52,15 @@ double lorentzian(double x, double x0, double gamma_l)
 {
 	return gamma_l/(2.0*M_PI) * (1/(pow((x-x0), 2) + pow((gamma_l/2), 2)));
 }
+
+int main(void)
+{
+	double V_e = 0.36;
+	double I_e = 0.60;
+	double T = 100;
+	double i;
+	for(i=0; i < 400; i+=0.001) {
+		fprintf(stdout, "%lf %lf", i, j_thermal(i, T, I_e, V_e, 3.7));
+	}
+	return EXIT_SUCCESS;
+}

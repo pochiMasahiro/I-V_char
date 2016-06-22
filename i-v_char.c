@@ -30,7 +30,7 @@ double calc_gamma(double sigma, double gamma_l)
 double calc_xi(double sigma, double gamma_l)
 {
 	double gamma = calc_gamma(sigma, gamma_l);
-	return 1.36603(gamma_l/gamma) -0.47719*pow((gamma_l/gamma), 2) +0.1116*pow((gamma_l/gamma), 3);
+	return 1.36603*(gamma_l/gamma) -0.47719*pow((gamma_l/gamma), 2) +0.1116*pow((gamma_l/gamma), 3);
 }
 
 // thermionic-type of current density
@@ -44,11 +44,11 @@ double j_thermal(double v, double T, double J_e, double V_e, double n)
 // Gaussian
 double gaussian(double x, double x0, double sigma)
 {
-	
+	return 1/(sigma*sqrt(2.0*M_PI))*exp(-pow((x-x0), 2) / (2*pow(sigma, 2)));
 }
 
 // Lorentzian
 double lorentzian(double x, double x0, double gamma_l)
 {
-	
+	return gamma_l/(2.0*M_PI) * (1/(pow((x-x0), 2) + pow((gamma_l/2), 2)));
 }

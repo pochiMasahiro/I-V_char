@@ -34,9 +34,21 @@ double calc_xi(double sigma, double gamma_l)
 }
 
 // thermionic-type of current density
-double j_themal(double v, double T, double J_e, double V_e, double n)
+double j_thermal(double v, double T, double J_e, double V_e, double n)
 {
 	double tmp1 = exp((e*v)/(n*k_B*T)) - 1.0;
 	double tmp2 = exp((e*V_e)/(n*k_B*T)) - 1.0;
 	return J_e * tmp1 / tmp2;
+}
+
+// Gaussian
+double gaussian(double x, double x0, double sigma)
+{
+	
+}
+
+// Lorentzian
+double lorentzian(double x, double x0, double gamma_l)
+{
+	
 }

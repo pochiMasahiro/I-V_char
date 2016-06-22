@@ -21,8 +21,8 @@ double supply(double E_z, double v, double T, double E_F, double E_c)
 {
 	double tmp1 = (e*m_*k_B*T)/(2*M_PI*M_PI*h_*h_*h_);
 	double tmp2 = 1+exp((E_F-(E_z-E_c))/k_B*T);
-	double tmp3 = 1+exp((E_F-(E_z-E_c+e*V))/k_B*T);
-	return tmp1*ln(tmp2/tmp3);
+	double tmp3 = 1+exp((E_F-(E_z-E_c+e*v))/k_B*T);
+	return tmp1*log(tmp2/tmp3);
 }
 
 // gamma_g
@@ -86,7 +86,7 @@ int main(void)
 		double eta_r = 0.71;
 		return E_r0 - e*eta_r*V;
 	}
-	double E_l(double E_l0)
+	double E_l(double V)
 	{
 		double E_l0 = ;
 		double eta_l = 0.353;
@@ -106,8 +106,8 @@ int main(void)
 	double j_rtd = 0.0;
 	for(i=0; i < 0.4; i+=0.01) {
 		// fprintf(stdout, "%lf %lf\n", i, j_thermal(i, T, I_e, V_e, 3.7));
-		j_rtd = supply(E_r(i), i, T, E_F, E_c)*t_res(E_l(i), V, gamma_l, sigma)*t_res_integral(E_l(i), gamma_l, sigma) + supply(E_r(i), i, T, E_F, E_c)*t_res(E_r(i), V, gamma_l, sigma)*t_res_integral(E_r(i), gamma_l, sigma);
-		tbrtd = j_rtd + j_thermal(i, T, I_e, V_e, 3.7);
+		j_rtd = supply(E_l(i), i, T, E_F, E_c)*t_res(E_l(i), i, gamma_l, sigma)*t_res_integral(E_l(i), gamma_l, sigma) + supply(E_r(i), i, T, E_F, E_c)*t_res(E_r(i), i, gamma_l, sigma)*t_res_integral(E_r(i), gamma_l, sigma);
+		tbrtd = j_rtd + j_thermal(i, T, I_e, V_e, n);
 		fprintf(stdout, "%lf %lf\n", i, tbrtd);
 	}
 	return EXIT_SUCCESS;

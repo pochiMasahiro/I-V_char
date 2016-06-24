@@ -12,7 +12,7 @@ Masahiro Fukuoka
 
 const double e = 1.60217662e-19;
 const double k_B = 1.38064852e-23;
-const double m_ = 9.10938356e-31;
+const double m_ = (9.10938356e-31)*0.041;
 const double h_ = 1.054571800e-34;
 
 
@@ -20,8 +20,9 @@ const double h_ = 1.054571800e-34;
 double supply(double E_z, double v, double T, double E_F, double E_c)
 {
 	double tmp1 = (e*m_*k_B*T)/(2*M_PI*M_PI*h_*h_*h_);
-	double tmp2 = 1+exp((E_F-(E_z-E_c))/k_B*T);
-	double tmp3 = 1+exp((E_F-(E_z-E_c+e*v))/k_B*T);
+	double tmp2 = 1+exp((E_F-(E_z-E_c))/(k_B*T));
+	double tmp3 = 1+exp((E_F-(E_z-E_c+(e*v)))/(k_B*T));
+	printf("tmp1: %E\ntmp2: %E\ntmp3: %E\n", tmp1, tmp2, tmp3);
 	return tmp1*log(tmp2/tmp3);
 }
 
@@ -78,37 +79,38 @@ double j_thermal(double v, double T, double J_e, double V_e, double n)
 	return J_e * tmp1 / tmp2;
 }
 
+double E_r(double V)
+{
+	double E_r0 = 97.2e-3;
+	double eta_r = 0.71;
+	return E_r0 - (e*eta_r*V);
+}
+double E_l(double V)
+{
+	double E_l0 = 44.7e-3;
+	double eta_l = 0.353;
+	return E_l0 - (e*eta_l*V);
+}
+
 int main(void)
 {
-	double E_r(double V)
-	{
-		double E_r0 = ;
-		double eta_r = 0.71;
-		return E_r0 - e*eta_r*V;
-	}
-	double E_l(double V)
-	{
-		double E_l0 = ;
-		double eta_l = 0.353;
-		return E_l0 - e*eta_l*V;
-	}
 	double V_e = 0.36;
 	double I_e = 0.60;
 	double T = 100;
 	double n = 3.7;
 	double sigma = 18.0e-3;
 	double gamma_l = 16.0e-3;
-	double E_F = ;
-	double E_c = ;
+	double E_F = 40e-3;
+	double E_c = 0.0;
 	
 	double i;
 	double tbrtd = 0.0;
 	double j_rtd = 0.0;
 	for(i=0; i < 0.4; i+=0.01) {
 		// fprintf(stdout, "%lf %lf\n", i, j_thermal(i, T, I_e, V_e, 3.7));
-		j_rtd = supply(E_l(i), i, T, E_F, E_c)*t_res(E_l(i), i, gamma_l, sigma)*t_res_integral(E_l(i), gamma_l, sigma) + supply(E_r(i), i, T, E_F, E_c)*t_res(E_r(i), i, gamma_l, sigma)*t_res_integral(E_r(i), gamma_l, sigma);
-		tbrtd = j_rtd + j_thermal(i, T, I_e, V_e, n);
-		fprintf(stdout, "%lf %lf\n", i, tbrtd);
+		j_rtd = supply(E_l(i), i, T, E_F, E_c);//*t_res(E_l(i), i, gamma_l, sigma)*t_res_integral(E_l(i), gamma_l, sigma) + supply(E_r(i), i, T, E_F, E_c)*t_res(E_r(i), i, gamma_l, sigma)*t_res_integral(E_r(i), gamma_l, sigma);
+		//tbrtd = j_rtd + j_thermal(i, T, I_e, V_e, n);
+		fprintf(stdout, "%lf %lf\n", i, j_rtd);
 	}
 	return EXIT_SUCCESS;
 }

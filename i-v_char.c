@@ -20,9 +20,9 @@ const double h_ = 1.054571800e-34;
 double supply(double E_z, double v, double T, double E_F, double E_c)
 {
 	double tmp1 = (e*m_*k_B*T)/(2*M_PI*M_PI*h_*h_*h_);
-	double tmp2 = 1+exp((E_F-(E_z-E_c))/(k_B*T));
-	double tmp3 = 1+exp((E_F-(E_z-E_c+(e*v)))/(k_B*T));
-	printf("tmp1: %E\ntmp2: %E\ntmp3: %E\n", tmp1, tmp2, tmp3);
+	double tmp2 = 1.0 + exp((E_F-(E_z-E_c))/(k_B*T));
+	double tmp3 = 1.0 + exp((E_F-(E_z-E_c+(e*v)))/(k_B*T));
+	printf("tmp1: %E\ntmp2: %E\ntmp3: %E\n", tmp1, exp((E_F-(E_z-E_c))/(k_B*T)), E_F-(E_z-E_c+e*v));
 	return tmp1*log(tmp2/tmp3);
 }
 
@@ -89,6 +89,7 @@ double E_l(double V)
 {
 	double E_l0 = 44.7e-3;
 	double eta_l = 0.353;
+	printf( "%e\n", E_l0 - e*eta_l*V);
 	return E_l0 - (e*eta_l*V);
 }
 

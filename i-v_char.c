@@ -11,7 +11,7 @@ Masahiro Fukuoka
 #include <ctype.h>
 
 const double e = 1.60217662e-19;
-const double k_B = 1.38064852e-23;
+const double k_B = 1.38e-23;
 const double m_ = (9.10938356e-31)*0.041;
 const double h_ = 6.582119514e-16;
 
@@ -22,7 +22,7 @@ double supply(double E_z, double v, double T, double E_F, double E_c)
 	double tmp1 = (e*m_*k_B*T)/(2*M_PI*M_PI*h_*h_*h_);
 	double tmp2 = 1.0 + exp((E_F-(E_z-E_c))/(k_B*T));
 	double tmp3 = 1.0 + exp((E_F-(E_z-E_c+v))/(k_B*T));
-//	printf("tmp1: %E\ntmp2: %E\ntmp3: %E\n", tmp1, tmp2, tmp3);
+	printf("tmp1: %E\ntmp2: %E\ntmp3: %E\n", tmp1, tmp2, tmp3);
 	return tmp1*log(tmp2/tmp3);
 }
 
@@ -76,6 +76,7 @@ double j_thermal(double v, double T, double J_e, double V_e, double n)
 {
 	double tmp1 = exp((e*v)/(n*k_B*T)) - 1.0;
 	double tmp2 = exp((e*V_e)/(n*k_B*T)) - 1.0;
+	printf("tmp1: %E tmp2: %E\n", tmp1, tmp2 );
 	return J_e * tmp1 / tmp2;
 }
 
@@ -95,7 +96,7 @@ long double E_l(double V)
 int main(void)
 {
 	double V_e = 0.36;
-	double I_e = 0.60;
+	double I_e = 0.60e-3;
 	double T = 100;
 	double n = 3.7;
 	double sigma = 18.0e-3;

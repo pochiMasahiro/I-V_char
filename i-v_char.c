@@ -13,7 +13,7 @@ Masahiro Fukuoka
 const double e = 1.60217662e-19;
 const double k_B = 1.38064852e-23;
 const double m_ = (9.10938356e-31)*0.041;
-const double h_ = 1.054571800e-34;
+const double h_ = 6.582119514e-16;
 
 
 // electron suppling
@@ -21,8 +21,8 @@ double supply(double E_z, double v, double T, double E_F, double E_c)
 {
 	double tmp1 = (e*m_*k_B*T)/(2*M_PI*M_PI*h_*h_*h_);
 	double tmp2 = 1.0 + exp((E_F-(E_z-E_c))/(k_B*T));
-	double tmp3 = 1.0 + exp((E_F-(E_z-E_c+(e*v)))/(k_B*T));
-	printf("tmp1: %E\ntmp2: %E\ntmp3: %E\n", tmp1, exp((E_F-(E_z-E_c))/(k_B*T)), E_F-(E_z-E_c+e*v));
+	double tmp3 = 1.0 + exp((E_F-(E_z-E_c+v))/(k_B*T));
+//	printf("tmp1: %E\ntmp2: %E\ntmp3: %E\n", tmp1, tmp2, tmp3);
 	return tmp1*log(tmp2/tmp3);
 }
 
@@ -36,26 +36,26 @@ double calc_gamma_g(double sigma)
 double calc_gamma(double sigma, double gamma_l)
 {
 	double gamma_g = calc_gamma_g(sigma);
-	return pow(pow(gamma_g, 5) + 2.69269*pow(gamma_g, 4)*gamma_l + 2.42843*pow(gamma_g, 3)*pow(gamma_l, 2) + 4.47163*pow(gamma_g, 2)*pow(gamma_l, 3) + 0.07842*gamma_g*pow(gamma_l, 4) + pow(gamma_l, 5), 1/3);
+	return pow(pow(gamma_g, 5) + 2.69269*pow(gamma_g, 4)*gamma_l + 2.42843*pow(gamma_g, 3)*pow(gamma_l, 2) + 4.47163*pow(gamma_g, 2)*pow(gamma_l, 3) + 0.07842*gamma_g*pow(gamma_l, 4) + pow(gamma_l, 5), 1/5);
 }
 
 // xi
 double calc_xi(double sigma, double gamma_l)
 {
 	double gamma = calc_gamma(sigma, gamma_l);
-	return 1.36603*(gamma_l/gamma) -0.47719*pow((gamma_l/gamma), 2) +0.1116*pow((gamma_l/gamma), 3);
+	return 1.36603*(gamma_l/gamma) -0.47719*pow((gamma_l/gamma), 2) +0.11116*pow((gamma_l/gamma), 3);
 }
 
 // Gaussian
 double gaussian(double x, double x0, double sigma)
 {
-	return 1/(sigma*sqrt(2.0*M_PI))*exp(-pow((x-x0), 2) / (2*pow(sigma, 2)));
+	return (1/(sigma*sqrt(2.0*M_PI)))*exp(-pow((x-x0), 2) / (2*pow(sigma, 2)));
 }
 
 // Lorentzian
 double lorentzian(double x, double x0, double gamma_l)
 {
-	return gamma_l/(2.0*M_PI) * (1/(pow((x-x0), 2) + pow((gamma_l/2), 2)));
+	return (gamma_l/(2.0*M_PI)) * (1/(pow((x-x0), 2) + pow((gamma_l/2), 2)));
 }
 
 // transmission probability
@@ -83,14 +83,13 @@ double E_r(double V)
 {
 	double E_r0 = 97.2e-3;
 	double eta_r = 0.71;
-	return E_r0 - (e*eta_r*V);
+	return E_r0 - (eta_r*V);
 }
-double E_l(double V)
+long double E_l(double V)
 {
 	double E_l0 = 44.7e-3;
 	double eta_l = 0.353;
-	printf( "%e\n", E_l0 - e*eta_l*V);
-	return E_l0 - (e*eta_l*V);
+	return E_l0 - (eta_l*V);
 }
 
 int main(void)
@@ -107,11 +106,15 @@ int main(void)
 	double i;
 	double tbrtd = 0.0;
 	double j_rtd = 0.0;
-	for(i=0; i < 0.4; i+=0.01) {
-		// fprintf(stdout, "%lf %lf\n", i, j_thermal(i, T, I_e, V_e, 3.7));
-		j_rtd = supply(E_l(i), i, T, E_F, E_c);//*t_res(E_l(i), i, gamma_l, sigma)*t_res_integral(E_l(i), gamma_l, sigma) + supply(E_r(i), i, T, E_F, E_c)*t_res(E_r(i), i, gamma_l, sigma)*t_res_integral(E_r(i), gamma_l, sigma);
-		//tbrtd = j_rtd + j_thermal(i, T, I_e, V_e, n);
-		fprintf(stdout, "%lf %lf\n", i, j_rtd);
+	double j_rtd_l = 0.0;
+	double j_rtd_r = 0.0;
+	for(i=0; i < 0.4; i+=0.02) {
+		// fprintf(stdout, "%lf %lf\n", i, j_thermal(i, T, I_e, V_e, 3.7));       
+		j_rtd_l = supply(E_l(i), i, T, E_F, E_c)*t_res(E_l(i), i, gamma_l, sigma)*t_res_integral(E_l(i), gamma_l, sigma);
+		j_rtd_r = supply(E_r(i), i, T, E_F, E_c)*t_res(E_r(i), i, gamma_l, sigma)*t_res_integral(E_r(i), gamma_l, sigma);
+		j_rtd = j_rtd_l + j_rtd_r;
+		tbrtd = j_thermal(i, T, I_e, V_e, n);
+		fprintf(stdout, "%E %E %E %E %E\n", i, j_rtd_l, j_rtd_r, j_rtd, tbrtd);
 	}
 	return EXIT_SUCCESS;
 }

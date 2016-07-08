@@ -10,19 +10,18 @@ Masahiro Fukuoka
 #include <string.h>
 #include <ctype.h>
 
-const double e = 1.60217662e-19;
-const double k_B = 1.38e-23;
-const double m_ = (9.10938356e-31)*0.041;
-const double h_ = 6.582119514e-16;
+const double e = 1.602e-19;
+const double k_B = 1.38e-23 / e;
+const double m_ = (9.11e-31)*0.041;
+const double h_ = 1.05e-34;
 
 
 // electron suppling
 double supply(double E_z, double v, double T, double E_F, double E_c)
 {
-	double tmp1 = (e*m_*k_B*T)/(2*M_PI*M_PI*h_*h_*h_);
-	double tmp2 = 1.0 + exp((E_F-(E_z-E_c))/(k_B*T));
+	double tmp1 = (pow(e, 2)*m_*k_B*T)/(2*pow(M_PI, 2)*pow(h_, 3));
+	double tmp2 = 1.0 + exp((E_F-E_c)/(k_B*T));
 	double tmp3 = 1.0 + exp((E_F-(E_z-E_c+v))/(k_B*T));
-	printf("tmp1: %E\ntmp2: %E\ntmp3: %E\n", tmp1, tmp2, tmp3);
 	return tmp1*log(tmp2/tmp3);
 }
 
@@ -74,9 +73,8 @@ double t_res_integral(double V, double gamma_l, double sigma)
 // thermionic-type of current density
 double j_thermal(double v, double T, double J_e, double V_e, double n)
 {
-	double tmp1 = exp((e*v)/(n*k_B*T)) - 1.0;
-	double tmp2 = exp((e*V_e)/(n*k_B*T)) - 1.0;
-	printf("tmp1: %E tmp2: %E\n", tmp1, tmp2 );
+	double tmp1 = exp(v/(n*k_B*T)) - 1.0;
+	double tmp2 = exp(V_e/(n*k_B*T)) - 1.0;
 	return J_e * tmp1 / tmp2;
 }
 
@@ -109,13 +107,15 @@ int main(void)
 	double j_rtd = 0.0;
 	double j_rtd_l = 0.0;
 	double j_rtd_r = 0.0;
-	for(i=0; i < 0.4; i+=0.02) {
-		// fprintf(stdout, "%lf %lf\n", i, j_thermal(i, T, I_e, V_e, 3.7));       
+	double j_th = 0.0;
+	fprintf(stdout, "V, j_rtd_l, j_rtd_r, j_rtd, j_th\n");       
+	for(i=0; i < 0.4; i+=0.0002) {
 		j_rtd_l = supply(E_l(i), i, T, E_F, E_c)*t_res(E_l(i), i, gamma_l, sigma)*t_res_integral(E_l(i), gamma_l, sigma);
 		j_rtd_r = supply(E_r(i), i, T, E_F, E_c)*t_res(E_r(i), i, gamma_l, sigma)*t_res_integral(E_r(i), gamma_l, sigma);
-		j_rtd = j_rtd_l + j_rtd_r;
-		tbrtd = j_thermal(i, T, I_e, V_e, n);
-		fprintf(stdout, "%E %E %E %E %E\n", i, j_rtd_l, j_rtd_r, j_rtd, tbrtd);
+		j_rtd = (j_rtd_l + j_rtd_r) * 3.0e-28;
+		j_th = j_thermal(i, T, I_e, V_e, n) * 3e6;
+		tbrtd = j_rtd + j_th;
+		fprintf(stdout, "%E %E %E %E %E %E\n", i, j_rtd_l, j_rtd_r, j_rtd, j_th, tbrtd);
 	}
 	return EXIT_SUCCESS;
 }

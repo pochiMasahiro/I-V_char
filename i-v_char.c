@@ -12,7 +12,7 @@ Masahiro Fukuoka
 
 const double e = 1.602e-19;
 const double k_B = 1.38e-23 / e;
-const double m_ = (9.11e-31)*0.041;
+const double m_ = (9.11e-31)*0.0041;
 const double h_ = 1.05e-34;
 
 
@@ -48,13 +48,13 @@ double calc_xi(double sigma, double gamma_l)
 // Gaussian
 double gaussian(double x, double x0, double sigma)
 {
-	return (1/(sigma*sqrt(2.0*M_PI)))*exp(-pow((x-x0), 2) / (2*pow(sigma, 2)));
+	return (1.0/(sigma*sqrt(2.0*M_PI)))*exp(-1.0 * pow(x-x0, 2.0) / (2.0*pow(sigma, 2.0)));
 }
 
 // Lorentzian
 double lorentzian(double x, double x0, double gamma_l)
 {
-	return (gamma_l/(2.0*M_PI)) * (1/(pow((x-x0), 2) + pow((gamma_l/2), 2)));
+	return (gamma_l/(2.0*M_PI)) * ( 1.0 / ( pow(x-x0, 2.0) + pow(gamma_l/2.0, 2.0) ) );
 }
 
 // transmission probability
@@ -67,7 +67,7 @@ double t_res(double E_z, double V, double gamma_l, double sigma)
 double t_res_integral(double V, double gamma_l, double sigma)
 {
 	double xi = calc_xi(sigma, gamma_l);
-	return (1-xi)/M_SQRT2 + (xi/M_PI)*(M_PI_2+atan((-2*V)/gamma_l));
+	return (1.0-xi)/M_SQRT2 + (xi/M_PI)*(M_PI_2+atan2(-2.0*V,gamma_l));
 }
 
 // thermionic-type of current density
@@ -110,8 +110,8 @@ int main(void)
 	double j_th = 0.0;
 	fprintf(stdout, "V, j_rtd_l, j_rtd_r, j_rtd, j_th\n");       
 	for(i=0; i < 0.4; i+=0.0002) {
-		j_rtd_l = supply(E_l(i), i, T, E_F, E_c)*t_res(E_l(i), i, gamma_l, sigma)*t_res_integral(E_l(i), gamma_l, sigma);
-		j_rtd_r = supply(E_r(i), i, T, E_F, E_c)*t_res(E_r(i), i, gamma_l, sigma)*t_res_integral(E_r(i), gamma_l, sigma);
+		j_rtd_l = supply(E_l(i), i, T, E_F, E_c)*t_res(E_l(i), E_r(i), gamma_l, sigma)*t_res_integral(E_l(i), gamma_l, sigma);
+		j_rtd_r = supply(E_r(i), i, T, E_F, E_c)*t_res(E_r(i), E_l(i), gamma_l, sigma)*t_res_integral(E_r(i), gamma_l, sigma);
 		j_rtd = (j_rtd_l + j_rtd_r) * 3.0e-28;
 		j_th = j_thermal(i, T, I_e, V_e, n) * 3e6;
 		tbrtd = j_rtd + j_th;

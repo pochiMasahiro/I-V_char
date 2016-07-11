@@ -113,7 +113,7 @@ double j_tbrtd(double v, TBRTDproperties prp)
 	double j_rtd_l = supply(E_l(v, prp), v, prp)*t_res(E_l(v, prp), E_r(v, prp), prp)*t_res_integral(E_l(v, prp), prp);
 	double j_rtd_r = supply(E_r(v, prp), v, prp)*t_res(E_r(v, prp), E_l(v, prp), prp)*t_res_integral(E_r(v, prp), prp);
 	double j_th = j_thermal(v, prp);
-	return j_th + prp.constB + (j_rtd_l + j_rtd_r) * prp.constA;
+	return j_th * prp.constB + (j_rtd_l + j_rtd_r) * prp.constA;
 }
 
 int main(void)
@@ -123,7 +123,7 @@ int main(void)
 	TBRTD.J_e = 0.60e-3;
 	TBRTD.T = 100;
 	TBRTD.n = 3.7;
-	TBRTD.sigma = 18.0e-3;
+	TBRTD.sigma = 20.0e-3;
 	TBRTD.gamma_l = 16.0e-3;
 	TBRTD.xi = calc_xi(TBRTD.sigma, TBRTD.gamma_l);
 	TBRTD.E_F = 40e-3;
@@ -136,8 +136,8 @@ int main(void)
 	TBRTD.E_r0 = 97.2e-3;
 	TBRTD.Eta_l = 0.353;
 	TBRTD.Eta_r = 0.71;
-	TBRTD.constA = 4.0e-28;
-	TBRTD.constB = 5.0e4;
+	TBRTD.constA = 3.0e-28;
+	TBRTD.constB = 3.0e6;
 
 	double i;
 	for(i=0; i < 0.4; i+=0.0002) {

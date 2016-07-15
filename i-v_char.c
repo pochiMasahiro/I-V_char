@@ -116,7 +116,7 @@ double j_tbrtd(double v, TBRTDproperties prp)
 	return j_th * prp.constB + (j_rtd_l + j_rtd_r) * prp.constA;
 }
 
-int main(void)
+/*int main(void)
 {
 	TBRTDproperties TBRTD;
 	TBRTD.V_e = 0.36;
@@ -144,4 +144,4 @@ int main(void)
 		fprintf(stdout, "%E %E\n", i, j_tbrtd(i, TBRTD));
 	}
 	return EXIT_SUCCESS;
-}
+}*/

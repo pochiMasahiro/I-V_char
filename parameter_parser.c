@@ -3,28 +3,53 @@
  * Masahiro Fukuoka
  * 2016/07/15
 */
+#ifndef _STDIO
+#define _STDIO
 
 #include <stdio.h>
+#endif
+#ifndef _STDLIB
+
 #include <stdlib.h>
+
+#endif
+#ifndef _STRING
+
 #include <string.h>
+
+#endif
+#ifndef _I_V_CHAR
+
 #include "i-v_char.h"
 
-TBRTDproperties parameter(char *filename)
+#endif
+// Physics parameter
+const double k_b = 1.38e-23;
+const double e = 1.602e-19;
+const double m0 = 9.11e-31;
+const double hbar = 1.05e-34;
+
+TBRTDproperties parameter()
 {
 	FILE *fp;
+  char filename[255];
 	char str[255];
 	char name[255];
 	char dummy[8];
 	char value[255];
 	TBRTDproperties prp;
-	
+	double m_star;
+
+  fgets(filename, 254, stdin);
+  printf("%s\n", filename);
+  filename[strlen(filename)] = '\0';
 	if ((fp = fopen( filename, "r" )) == NULL) {
 		fprintf( stderr, "File open error");
 		exit(EXIT_FAILURE);
 	}
 	
 	while (fgets(str, 255, fp) != NULL) {
-		if ((str[0] == '#') | (str[0] == '\n')) ;
+		if ((str[0] == '#') || (str[0] == '\n')) ;
 		else {
 			sscanf(str, "%s %s %s", name, dummy, value);
 			if (!strcmp(name, "V_e")) prp.V_e = strtod(value, NULL);
@@ -39,12 +64,19 @@ TBRTDproperties parameter(char *filename)
 			if (!strcmp(name, "Eta_l")) prp.Eta_l = strtod(value, NULL);
 			if (!strcmp(name, "Eta_r")) prp.Eta_r = strtod(value, NULL);
 			if (!strcmp(name, "area")) prp.area = strtod(value, NULL);
-			if (!strcmp(name, "k_B")) prp.k_B = strtod(value, NULL);
-			if (!strcmp(name, "e")) prp.e = strtod(value, NULL);
+      if (!strcmp(name, "m*")) m_star = strtod(value, NULL); 
 			if (!strcmp(name, "hbar")) prp.hbar = strtod(value, NULL);
 			if (!strcmp(name, "constA")) prp.constA = strtod(value, NULL);
 			if (!strcmp(name, "constB")) prp.constB = strtod(value, NULL);
 		}
 	}
+
+  prp.hbar = hbar;
+  prp.e = e;
+  prp.k_B = k_b / e;
+  prp.m = m0 * m_star;
+  prp.xi = calc_xi(prp.sigma, prp.gamma_l);
+
+
 	return prp;
 }

@@ -76,7 +76,7 @@ TBRTDproperties parameter()
   prp.k_B = k_b / e;
   prp.m = m0 * m_star;
   prp.xi = calc_xi(prp.sigma, prp.gamma_l);
-
+  fclose(fp);
 
 	return prp;
 }

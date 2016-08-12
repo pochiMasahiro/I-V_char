@@ -28,7 +28,7 @@ TBRTDproperties parameter()
   fgets(filename, 254, stdin);
   printf("%s\n", filename);
   filename[strlen(filename)] = '\0';
-	if ((fp = fopen( filename, "r" )) == NULL) {
+	if ((fp = fopen( "parameter.txt", "r" )) == NULL) {
 		fprintf( stderr, "File open error");
 		exit(EXIT_FAILURE);
 	}

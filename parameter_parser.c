@@ -3,26 +3,11 @@
  * Masahiro Fukuoka
  * 2016/07/15
 */
-#ifndef _STDIO
-#define _STDIO
-
 #include <stdio.h>
-#endif
-#ifndef _STDLIB
-
 #include <stdlib.h>
-
-#endif
-#ifndef _STRING
-
 #include <string.h>
-
-#endif
-#ifndef _I_V_CHAR
-
 #include "i-v_char.h"
 
-#endif
 // Physics parameter
 const double k_b = 1.38e-23;
 const double e = 1.602e-19;

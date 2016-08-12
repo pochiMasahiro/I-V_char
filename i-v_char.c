@@ -3,20 +3,8 @@ Calculation of I-V characteristic for TBRTD
 2016/06/22
 Masahiro Fukuoka
 */
-#ifndef _MATH
-#define _MATH
-
 #include <math.h>
-
-#endif
-#ifndef _I_V_CHAR
-#define _I_V_CHAR
-
 #include "i-v_char.h"
-
-#endif
-
-
 
 // electron suppling
 double supply(double E_z, double v, TBRTDproperties prp)

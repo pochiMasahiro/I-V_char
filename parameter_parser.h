@@ -10,5 +10,9 @@
 
 #endif
 
+#ifndef _PARAMETER_PARSER_H
+#define _PARAMETER_PARSER_H
+
 TBRTDproperties parameter();
 
+#endif

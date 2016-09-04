@@ -10,7 +10,7 @@ Masahiro Fukuoka
 double supply(double E_z, double v, TBRTDproperties prp)
 {
 	double tmp1 = (pow(prp.e, 2) * prp.m * prp.k_B * prp.T) / (2*pow(M_PI, 2) * pow(prp.hbar, 3));
-	double tmp2 = 1.0 + exp(prp.E_F / (prp.k_B * prp.T));
+	double tmp2 = 1.0 + exp((prp.E_F - E_z) / (prp.k_B * prp.T));
 	double tmp3 = 1.0 + exp((prp.E_F - E_z - v) / (prp.k_B * prp.T));
 	return tmp1*log(tmp2/tmp3);
 }

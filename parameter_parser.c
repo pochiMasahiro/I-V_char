@@ -17,7 +17,6 @@ const double hbar = 1.05e-34;
 TBRTDproperties parameter()
 {
 	FILE *fp;
-  char filename[255];
 	char str[255];
 	char name[255];
 	char dummy[8];
@@ -25,9 +24,6 @@ TBRTDproperties parameter()
 	TBRTDproperties prp;
 	double m_star;
 
-  fgets(filename, 254, stdin);
-  printf("%s\n", filename);
-  filename[strlen(filename)] = '\0';
 	if ((fp = fopen( "parameter.txt", "r" )) == NULL) {
 		fprintf( stderr, "File open error");
 		exit(EXIT_FAILURE);

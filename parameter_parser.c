@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 #include "i-v_char.h"
 
 // Physics parameter
@@ -58,7 +59,7 @@ TBRTDproperties parameter()
   prp.k_B = k_b / e;
   prp.m = m0 * m_star;
   prp.xi = calc_xi(prp.sigma, prp.gamma_l);
-	prp.const = (e*e * prp.m * prp.kb * prp.T) / (2.0 * M_PI * M_PI * hbar * hbar * hbar) * prp.constA * prp.constB;
+	prp.Const = (e*e * prp.m * (k_b / e) * prp.T) / (2.0 * M_PI * M_PI * hbar * hbar * hbar) * prp.constA * prp.constB;
   fclose(fp);
 
 	return prp;

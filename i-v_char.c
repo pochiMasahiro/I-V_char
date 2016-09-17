@@ -62,7 +62,7 @@ double t_res_integral(double V, TBRTDproperties prp)
 double j_thermal(double v, TBRTDproperties prp)
 {
 	// double tmp1 = exp(v/(prp.n * prp.k_B * prp.T)) - 1.0;
-	double tmp2 = exp(prp.v / (prp.n * prp.k_B * prp.T)) - 1.0;
+	double tmp2 = exp(v / (prp.n * prp.k_B * prp.T)) - 1.0;
 	return prp.constC * tmp2;
 }
 
@@ -80,5 +80,5 @@ double j_tbrtd(double v, TBRTDproperties prp)
 	double j_rtd_l = supply(E_l(v, prp), v, prp)*t_res(E_l(v, prp), E_r(v, prp), prp)*t_res_integral(E_l(v, prp), prp);
 	double j_rtd_r = supply(E_r(v, prp), v, prp)*t_res(E_r(v, prp), E_l(v, prp), prp)*t_res_integral(E_r(v, prp), prp);
 	double j_th = j_thermal(v, prp);
-	return prp.const * (j_th + j_rtd_l + j_rtd_r);
+	return prp.Const * (j_th + j_rtd_l + j_rtd_r);
 }

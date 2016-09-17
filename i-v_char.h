@@ -22,7 +22,7 @@ typedef struct  {
 	double constA;
 	double constB;
 	double constC;
-	double const;
+	double Const;
 	double area;
 }TBRTDproperties;
 

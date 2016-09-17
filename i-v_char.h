@@ -21,6 +21,8 @@ typedef struct  {
 	double E_F;
 	double constA;
 	double constB;
+	double constC;
+	double const;
 	double area;
 }TBRTDproperties;
 

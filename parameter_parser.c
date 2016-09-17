@@ -49,6 +49,7 @@ TBRTDproperties parameter()
 			if (!strcmp(name, "hbar")) prp.hbar = strtod(value, NULL);
 			if (!strcmp(name, "constA")) prp.constA = strtod(value, NULL);
 			if (!strcmp(name, "constB")) prp.constB = strtod(value, NULL);
+			if (!strcmp(name, "constC")) prp.constC = strtod(value, NULL);
 		}
 	}
 
@@ -57,6 +58,7 @@ TBRTDproperties parameter()
   prp.k_B = k_b / e;
   prp.m = m0 * m_star;
   prp.xi = calc_xi(prp.sigma, prp.gamma_l);
+	prp.const = (e*e * prp.m * prp.kb * prp.T) / (2.0 * M_PI * M_PI * hbar * hbar * hbar) * prp.constA * prp.constB;
   fclose(fp);
 
 	return prp;
